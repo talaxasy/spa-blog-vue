@@ -32,7 +32,6 @@ export default {
 
   <main>
     ABOBA
-    test commit system
   </main>
 </template>
 
