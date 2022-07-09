@@ -21,6 +21,7 @@ export default {
 
     <div class="wrapper">
       <h1>Welcome to Vite</h1>
+
       {{ message }} ===> {{ counter }}
       <p>
         Vite is a Vue 3 framework for building decentralized applications.
@@ -31,6 +32,7 @@ export default {
 
   <main>
     ABOBA
+    test commit system
   </main>
 </template>
 
