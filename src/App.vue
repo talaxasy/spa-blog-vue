@@ -1,8 +1,8 @@
 
 <script setup lang="ts">
 import { reactive } from 'vue';
-import PostList from './components/PostList.vue';
-import PostForm from './components/PostForm.vue';
+import PostList from '@/components/PostList.vue';
+import PostForm from '@/components/PostForm.vue';
 
 type TState = {
   posts: Array<{
@@ -30,6 +30,7 @@ const state: TState = reactive({
 
 <template>
   <main class="main">
+
     <PostForm @create="(post) => state.posts.push(post)" />
     <PostList :posts="state.posts" />
   </main>

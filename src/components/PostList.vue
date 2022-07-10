@@ -1,20 +1,13 @@
 <template>
     <div class="wrapper">
         <h1>Posts</h1>
-        <div class="post" v-for="post in posts">
-            <div><b>Title:</b> <span>{{ post.title }}</span></div>
-            <div><b>Description:</b>
-                {{ " " }}
-                <p style="display: inline;">
-                    {{ post.description }}
-                </p>
-            </div>
-        </div>
+        <PostItem v-for="post in posts" :post="post" />
     </div>
 
 </template>
 
 <script lang="ts" setup>
+import PostItem from "./PostItem.vue";
 
 defineProps<{
     posts: Array<{
@@ -32,18 +25,8 @@ defineProps<{
         margin-bottom: 10px;
 
         &:last-child {
-            margin-bottom: 0;
+            margin-bottom: 50px;
         }
-    }
-}
-
-.post {
-    padding: 20px;
-    border-radius: 5px;
-    border: 5px solid rgb(0, 128, 77);
-
-    &:last-child {
-        margin-bottom: 50px;
     }
 }
 </style>

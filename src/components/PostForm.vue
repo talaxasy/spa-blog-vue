@@ -1,12 +1,4 @@
-<template>
-    <!--  @submit.prevent="createPost" -->
-    <form class="form" @submit.prevent="createPost">
-        <h1>Create post</h1>
-        <input required v-model="state.title" type="text" placeholder="Title">
-        <textarea required v-model="state.description" type="text" placeholder="Description" />
-        <button type="submit">Create</button>
-    </form>
-</template>
+
 
 <script setup lang="ts">
 import { reactive } from 'vue';
@@ -30,11 +22,16 @@ const createPost = () => {
     state.title = '';
 
 }
-
-
-
-
 </script>
+
+<template>
+    <form class="form" @submit.prevent="createPost">
+        <h1>Create post</h1>
+        <input required v-model="state.title" type="text" placeholder="Title">
+        <textarea required v-model="state.description" type="text" placeholder="Description" />
+        <button type="submit">Create</button>
+    </form>
+</template>
 
 <style lang="scss" scoped>
 .form {
