@@ -1,12 +1,9 @@
 <template>
     <!--  @submit.prevent="createPost" -->
-    <form class="form">
+    <form class="form" @submit.prevent="createPost">
         <h1>Create post</h1>
-        <input required v-bind:value="state.title" @input="state.title = ($event.target as HTMLInputElement).value"
-            type="text" placeholder="Title">
-        <textarea required v-bind:value="state.description"
-            @input="state.description = ($event.target as HTMLInputElement).value" type="text"
-            placeholder="Description" />
+        <input required v-model="state.title" type="text" placeholder="Title">
+        <textarea required v-model="state.description" type="text" placeholder="Description" />
         <button type="submit">Create</button>
     </form>
 </template>
@@ -14,11 +11,28 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 
+const emit = defineEmits<{
+    (e: 'create', post: { id: number, title: string, description: string }): void
+}>();
 
 const state = reactive({
     title: '',
     description: '',
 });
+
+const createPost = () => {
+    emit('create', {
+        id: Date.now(),
+        title: state.title,
+        description: state.description,
+    })
+    state.description = '';
+    state.title = '';
+
+}
+
+
+
 
 </script>
 
@@ -26,7 +40,8 @@ const state = reactive({
 .form {
     display: flex;
     flex-direction: column;
-    width: 500px;
+    width: 400px;
+    margin: 0 auto;
 
     &>* {
         margin-bottom: 10px;
