@@ -32,7 +32,6 @@ export default {
 
   <main>
     ABOBA
-    test another
   </main>
 </template>
 
