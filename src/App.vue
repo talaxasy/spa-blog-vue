@@ -8,33 +8,55 @@
 export default {
   data() {
     return {
-      message: 'Hello Vue!',
-      counter: 0,
+      posts: [{
+        id: 1, title: 'abobus', description: 'text'
+      },
+      {
+        id: 2, title: 'levus', description: 'text text 31323'
+      },
+      {
+        id: 3, title: 'deianus', description: 'lalallalalalal'
+      }]
     }
   }
 }
+
+
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
 
-    <div class="wrapper">
-      <h1>Welcome to Vite</h1>
-
-      {{ message }} ===> {{ counter }}
-      <p>
-        Vite is a Vue 3 framework for building decentralized applications.
-      </p>
-      <button @click="counter++">Click me</button>
-    </div>
   </header>
-
   <main>
-    TEST
+    <div class="post" v-for="post in posts">
+      <div><b>Название:</b> <span>{{ post.title }}</span></div>
+      <div><b>Описание:</b>
+        {{ " " }}
+        <p style="display: inline;">
+          {{ post.description }}
+        </p>
+      </div>
+    </div>
   </main>
+  <footer>
+
+  </footer>
 </template>
 
 <style>
 @import './assets/base.css';
+</style>
+
+<style lang="scss">
+.post {
+  padding: 20px;
+  border-radius: 5px;
+  border: 5px solid rgb(0, 128, 77);
+  margin-bottom: 20px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
 </style>
