@@ -71,4 +71,16 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  padding: 0 30px;
 }
+
+button, input, textarea {
+  border: 0;
+  background-color: #2c3e50;
+  outline: none;
+  padding: 8px 10px;
+  border-radius: 4px;
+  color: #f2f2f2;
+}
+
+

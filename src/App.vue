@@ -1,11 +1,42 @@
+
 <script setup lang="ts">
-// import components from './components'
+import { reactive } from 'vue';
+type TState = {
+  title: string;
+  description: string;
+  counter: number;
+  increment(): void;
+}
+
+const state: TState = reactive({
+  title: 'title',
+  description: 'description',
+  counter: 1,
+  increment() {
+    this.counter++;
+  },
+});
+
+
+const countCounter = () => {
+  state.counter++;
+};
+
+
+
+
 
 </script>
 
-
 <script lang="ts">
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  props: {
+    posts: Array<{ id: number, title: string, description: string }>,
+    title: String,
+    description: String,
+  },
   data() {
     return {
       posts: [{
@@ -16,22 +47,40 @@ export default {
       },
       {
         id: 3, title: 'deianus', description: 'lalallalalalal'
-      }]
+      }],
+      title: '',
+      description: ''
+    }
+  },
+  methods: {
+    createPost(e: Event) {
+      e.preventDefault();
     }
   }
-}
+})
+
 
 
 </script>
 
 <template>
-  <header>
-
-  </header>
-  <main>
+  <main class="main">
+    <div>
+      <div>{{ state.title }}</div>
+      <div>{{ state.description }}</div>
+      <div>{{ state.counter }}</div>
+      <button @click="countCounter">addCounter</button>
+    </div>
+    <form @submit="createPost">
+      <h1>Create post</h1>
+      <input v-bind:value="title" @input="title = ($event as any).target.value" type="text" placeholder="Title">
+      <textarea v-bind:value="description" type="text" placeholder="Description" />
+      <button type="submit">Create</button>
+    </form>
+    <h2>Posts:</h2>
     <div class="post" v-for="post in posts">
-      <div><b>Название:</b> <span>{{ post.title }}</span></div>
-      <div><b>Описание:</b>
+      <div><b>Title:</b> <span>{{ post.title }}</span></div>
+      <div><b>Description:</b>
         {{ " " }}
         <p style="display: inline;">
           {{ post.description }}
@@ -39,9 +88,6 @@ export default {
       </div>
     </div>
   </main>
-  <footer>
-
-  </footer>
 </template>
 
 <style>
@@ -49,6 +95,24 @@ export default {
 </style>
 
 <style lang="scss">
+.main {
+  &>form {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+
+    &>* {
+      margin-bottom: 10px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    padding: 20px 0;
+  }
+}
+
 .post {
   padding: 20px;
   border-radius: 5px;
