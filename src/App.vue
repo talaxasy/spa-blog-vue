@@ -31,7 +31,7 @@ export default {
   </header>
 
   <main>
-    ABOBA
+    TEST
   </main>
 </template>
 
