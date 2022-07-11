@@ -32,7 +32,7 @@ const state: TState = reactive({
   <main class="main">
 
     <PostForm @create="(post) => state.posts.push(post)" />
-    <PostList :posts="state.posts" />
+    <PostList :posts="state.posts" @delete="(id) => state.posts = state.posts.filter(el => el.id !== id)" />
   </main>
 </template>
 

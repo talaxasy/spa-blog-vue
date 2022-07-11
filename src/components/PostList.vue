@@ -1,11 +1,4 @@
-<template>
-    <div class="wrapper">
-        <h1>Posts</h1>
-        <PostItem v-for="post in posts" :post="post" />
 
-    </div>
-
-</template>
 
 <script lang="ts" setup>
 import PostItem from "./PostItem.vue";
@@ -18,7 +11,23 @@ defineProps<{
     }>;
 }>()
 
+defineEmits<{
+    (e: 'delete', id: number): void;
+}>()
+
 </script>
+
+<template>
+    <div class="wrapper" v-if="posts.length > 0">
+        <h1>Posts</h1>
+        <PostItem v-for="post in posts" :key="post.id" :post="post" @delete="$emit('delete', post.id)" />
+    </div>
+
+    <div style="opacity: 0.5" v-else>
+        <span>{{ `No posts`.toUpperCase() }}</span>
+    </div>
+
+</template>
 
 <style lang="scss" scoped>
 .wrapper {
