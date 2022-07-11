@@ -87,4 +87,12 @@ button {
   cursor: pointer;
 }
 
+hr {
+  opacity: .3;
+  border: none;
+  height: 1px;
+  background-color: rgb(69, 69, 69);
+  
+}
+
 

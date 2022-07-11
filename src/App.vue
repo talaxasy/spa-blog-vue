@@ -10,9 +10,10 @@ type TState = {
     title: string;
     description: string;
   }>;
+  dialogOpen: boolean;
 }
 
-const state: TState = reactive({
+const state = reactive<TState>({
   posts: [{
     id: 1, title: 'abobus', description: 'text'
   },
@@ -22,6 +23,7 @@ const state: TState = reactive({
   {
     id: 3, title: 'deianus', description: 'lalallalalalal'
   }],
+  dialogOpen: false,
 });
 </script>
 
@@ -30,8 +32,18 @@ const state: TState = reactive({
 
 <template>
   <main class="main">
+    <h1 style="margin-bottom: 10px;">Posts page</h1>
+    <hr />
+    <gen-button style="align-self: flex-start; margin: 15px 0;" @click="state.dialogOpen = true">Create
+    </gen-button>
+    <hr />
+    <gen-dialog v-model:open="state.dialogOpen">
+      <PostForm @create="(post) => {
+        state.posts.push(post);
+        state.dialogOpen = false;
+      }" />
+    </gen-dialog>
 
-    <PostForm @create="(post) => state.posts.push(post)" />
     <PostList :posts="state.posts" @delete="(id) => state.posts = state.posts.filter(el => el.id !== id)" />
   </main>
 </template>

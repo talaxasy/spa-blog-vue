@@ -41,13 +41,11 @@ const createPost = () => {
     margin: 0 auto;
 
     &>* {
-        margin-bottom: 10px;
+        margin-bottom: 15px;
 
         &:last-child {
             margin-bottom: 0;
         }
     }
-
-    padding: 20px 0;
 }
 </style>
