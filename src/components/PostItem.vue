@@ -26,7 +26,8 @@ defineEmits<{
             </div>
         </div>
         <div class="post__btns">
-            <button @click="$emit('delete', post.id)">Delete</button>
+            <gen-button @click="$emit('delete', post.id)">Delete</gen-button>
+
         </div>
     </div>
 </template>

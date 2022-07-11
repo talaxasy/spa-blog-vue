@@ -29,7 +29,7 @@ const createPost = () => {
         <h1>Create post</h1>
         <input required v-model="state.title" type="text" placeholder="Title">
         <textarea required v-model="state.description" type="text" placeholder="Description" />
-        <button type="submit">Create</button>
+        <gen-button type="submit">Create</gen-button>
     </form>
 </template>
 

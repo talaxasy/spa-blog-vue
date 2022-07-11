@@ -2,6 +2,7 @@
     <div class="wrapper">
         <h1>Posts</h1>
         <PostItem v-for="post in posts" :post="post" />
+
     </div>
 
 </template>
