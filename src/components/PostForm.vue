@@ -27,8 +27,8 @@ const createPost = () => {
 <template>
     <form class="form" @submit.prevent="createPost">
         <h1>Create post</h1>
-        <input required v-model="state.title" type="text" placeholder="Title">
-        <textarea required v-model="state.description" type="text" placeholder="Description" />
+        <gen-input required v-model="state.title" type="text" placeholder="Title" />
+        <gen-textarea required v-model="state.description" type="text" placeholder="Description" />
         <gen-button type="submit">Create</gen-button>
     </form>
 </template>
