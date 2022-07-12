@@ -1,7 +1,7 @@
 
 
 <script setup lang="ts">
-import { reactive } from 'vue';
+import { reactive, watch } from 'vue';
 
 const emit = defineEmits<{
     (e: 'create', post: { id: number, title: string, description: string }): void
@@ -20,7 +20,6 @@ const createPost = () => {
     })
     state.description = '';
     state.title = '';
-
 }
 </script>
 
