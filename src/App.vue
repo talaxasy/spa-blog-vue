@@ -1,8 +1,9 @@
 
 <script setup lang="ts">
-import { reactive } from 'vue';
+import { onBeforeMount, onMounted, reactive } from 'vue';
 import PostList from '@/components/PostList.vue';
 import PostForm from '@/components/PostForm.vue';
+import redaxios from 'redaxios';
 
 type TState = {
   posts: Array<{
@@ -11,19 +12,30 @@ type TState = {
     description: string;
   }>;
   dialogOpen: boolean;
+  postLoading: boolean;
 }
 
 const state = reactive<TState>({
-  posts: [{
-    id: 1, title: 'abobus', description: 'text'
-  },
-  {
-    id: 2, title: 'levus', description: 'text text 31323'
-  },
-  {
-    id: 3, title: 'deianus', description: 'lalallalalalal'
-  }],
+  posts: [],
   dialogOpen: false,
+  postLoading: true,
+});
+
+
+const getPosts = async () => {
+  await redaxios.get('https://jsonplaceholder.typicode.com/posts?_limit=10').then(({ data }) => {
+    (data as any[]).forEach(post => {
+      state.posts.push({ id: post.id, title: post.title, description: post.body });
+    })
+
+  }).catch((e) => alert(e));
+  state.postLoading = false;
+}
+
+
+
+onMounted(() => {
+  getPosts();
 });
 </script>
 
@@ -34,8 +46,7 @@ const state = reactive<TState>({
   <main class="main">
     <h1 style="margin-bottom: 10px;">Posts page</h1>
     <hr />
-    <gen-button style="align-self: flex-start; margin: 15px 0;" @click="state.dialogOpen = true">Create
-    </gen-button>
+    <gen-button style="align-self: flex-start; margin: 15px 0;" @click="state.dialogOpen = true">Create</gen-button>
     <hr />
     <gen-dialog v-model:open="state.dialogOpen">
       <PostForm @create="(post) => {
@@ -44,7 +55,9 @@ const state = reactive<TState>({
       }" />
     </gen-dialog>
 
-    <PostList :posts="state.posts" @delete="(id) => state.posts = state.posts.filter(el => el.id !== id)" />
+    <PostList v-if="!state.postLoading" :posts="state.posts"
+      @delete="(id) => state.posts = state.posts.filter(el => el.id !== id)" />
+    <div v-else>Loading...</div>
   </main>
 </template>
 
