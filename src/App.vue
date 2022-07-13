@@ -3,6 +3,7 @@ import { onMounted, reactive, watch } from 'vue';
 import PostList from '@/components/PostList.vue';
 import PostForm from '@/components/PostForm.vue';
 import redaxios from 'redaxios';
+import { computed } from '@vue/reactivity';
 
 type TPost = {
   id: number;
@@ -11,7 +12,6 @@ type TPost = {
 }
 
 type TState = {
-  _posts: TPost[];
   posts: TPost[];
   dialogOpen: boolean;
   postLoading: boolean;
@@ -23,7 +23,6 @@ type TState = {
   searchQuery: string;
 }
 const state = reactive<TState>({
-  _posts: [],
   posts: [],
   dialogOpen: false,
   postLoading: true,
@@ -40,30 +39,24 @@ const getPosts = () => {
     (data as any[]).forEach(post => {
       state.posts.push({ id: post.id, title: post.title, description: post.body });
     })
-    state._posts = state.posts;
   }).catch((e) => alert(e));
   state.postLoading = false;
 }
 
-watch(() => state.selectedSort, (selected) => {
-  if (selected === 'title') {
-    state.posts.sort((a, b) => a.title.localeCompare(b.title));
-    state._posts.sort((a, b) => a.title.localeCompare(b.title));
-  } else if (selected === 'description') {
-    state.posts.sort((a, b) => a.description.localeCompare(b.description));
-    state._posts.sort((a, b) => a.description.localeCompare(b.description));
-  } else if (selected === 'new') {
-    state.posts.sort((a, b) => b.id - a.id);
-    state._posts.sort((a, b) => b.id - a.id);
+const sortedPosts = computed(() => {
+  const sortBy = state.selectedSort;
+  const filteredPosts = state.posts.filter(post => post.title.toLowerCase().includes(state.searchQuery.toLowerCase()));
+  switch (sortBy) {
+    case 'title':
+      return filteredPosts.sort((a, b) => a.title.localeCompare(b.title));
+    case 'description':
+      return filteredPosts.sort((a, b) => a.description.localeCompare(b.description));
+    case 'new':
+      return filteredPosts.sort((a, b) => b.id - a.id);
+    default:
+      return filteredPosts;
   }
-})
-
-watch(() => state.searchQuery, (query) => {
-  state.posts = state._posts.filter(post => {
-    return post.title.toLowerCase().includes(query.toLowerCase());
-  });
-
-})
+});
 
 
 onMounted(() => {
@@ -89,7 +82,7 @@ onMounted(() => {
       }" />
     </gen-dialog>
 
-    <PostList v-if="!state.postLoading" :posts="state.posts"
+    <PostList v-if="!state.postLoading" :posts="sortedPosts"
       @delete="(id) => state.posts = state.posts.filter(el => el.id !== id)" />
     <div v-else>Loading...</div>
   </main>
