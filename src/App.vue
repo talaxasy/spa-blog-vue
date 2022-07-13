@@ -4,12 +4,15 @@ import PostList from '@/components/PostList.vue';
 import PostForm from '@/components/PostForm.vue';
 import redaxios from 'redaxios';
 
+type TPost = {
+  id: number;
+  title: string;
+  description: string;
+}
+
 type TState = {
-  posts: Array<{
-    id: number;
-    title: string;
-    description: string;
-  }>;
+  _posts: TPost[];
+  posts: TPost[];
   dialogOpen: boolean;
   postLoading: boolean;
   selectedSort: 'title' | 'description' | 'new' | '';
@@ -17,8 +20,10 @@ type TState = {
     value: string;
     label: string;
   }[];
+  searchQuery: string;
 }
 const state = reactive<TState>({
+  _posts: [],
   posts: [],
   dialogOpen: false,
   postLoading: true,
@@ -27,27 +32,37 @@ const state = reactive<TState>({
     { value: 'title', label: 'Title' },
     { value: 'description', label: 'Description' },
     { value: 'new', label: 'Newest' },
-  ]
+  ],
+  searchQuery: '',
 });
-const getPosts = async () => {
-  await redaxios.get('https://jsonplaceholder.typicode.com/posts?_limit=10').then(({ data }) => {
+const getPosts = () => {
+  redaxios.get('https://jsonplaceholder.typicode.com/posts?_limit=10').then(({ data }) => {
     (data as any[]).forEach(post => {
       state.posts.push({ id: post.id, title: post.title, description: post.body });
     })
-
+    state._posts = state.posts;
   }).catch((e) => alert(e));
   state.postLoading = false;
 }
 
 watch(() => state.selectedSort, (selected) => {
-
   if (selected === 'title') {
     state.posts.sort((a, b) => a.title.localeCompare(b.title));
+    state._posts.sort((a, b) => a.title.localeCompare(b.title));
   } else if (selected === 'description') {
     state.posts.sort((a, b) => a.description.localeCompare(b.description));
+    state._posts.sort((a, b) => a.description.localeCompare(b.description));
   } else if (selected === 'new') {
     state.posts.sort((a, b) => b.id - a.id);
+    state._posts.sort((a, b) => b.id - a.id);
   }
+})
+
+watch(() => state.searchQuery, (query) => {
+  state.posts = state._posts.filter(post => {
+    return post.title.toLowerCase().includes(query.toLowerCase());
+  });
+
 })
 
 
@@ -64,6 +79,7 @@ onMounted(() => {
     <h1 style="margin-bottom: 10px;">Posts page</h1>
     <div class="main__btns">
       <gen-button @click="state.dialogOpen = true">Create</gen-button>
+      <gen-input v-model="state.searchQuery" type="text" placeholder="Search" />
       <gen-select v-model="state.selectedSort" :options="state.sortOptions" />
     </div>
     <gen-dialog v-model:open="state.dialogOpen">

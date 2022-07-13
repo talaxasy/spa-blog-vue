@@ -1,6 +1,7 @@
 
 
 <script lang="ts" setup>
+import { reactive } from "vue";
 import PostItem from "./PostItem.vue";
 
 defineProps<{
@@ -14,12 +15,12 @@ defineProps<{
 defineEmits<{
     (e: 'delete', id: number): void;
 }>()
-
 </script>
 
 <template>
     <div class="wrapper" v-if="posts.length > 0">
         <h1>Posts</h1>
+
         <TransitionGroup name="post-list">
             <PostItem v-for="post in posts" :key="post.id" :post="post" @delete="$emit('delete', post.id)" />
         </TransitionGroup>
