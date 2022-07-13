@@ -20,7 +20,9 @@ defineEmits<{
 <template>
     <div class="wrapper" v-if="posts.length > 0">
         <h1>Posts</h1>
-        <PostItem v-for="post in posts" :key="post.id" :post="post" @delete="$emit('delete', post.id)" />
+        <TransitionGroup name="post-list">
+            <PostItem v-for="post in posts" :key="post.id" :post="post" @delete="$emit('delete', post.id)" />
+        </TransitionGroup>
     </div>
 
     <div style="opacity: 0.5" v-else>
@@ -38,5 +40,22 @@ defineEmits<{
             margin-bottom: 50px;
         }
     }
+}
+
+.post-list-move,
+.post-list-enter-active,
+.post-list-leave-active {
+    transition: all 0.3s ease;
+}
+
+.post-list-leave-active {
+    position: absolute;
+}
+
+.post-list-enter-from,
+.post-list-leave-to {
+    opacity: 0;
+    transform: scale(0.5);
+
 }
 </style>
