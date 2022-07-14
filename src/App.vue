@@ -34,8 +34,8 @@ const state = reactive<TState>({
   ],
   searchQuery: '',
 });
-const getPosts = () => {
-  redaxios.get('https://jsonplaceholder.typicode.com/posts?_limit=10').then(({ data }) => {
+const getPosts = async () => {
+  await redaxios.get('https://jsonplaceholder.typicode.com/posts?_limit=10').then(({ data }) => {
     (data as any[]).forEach(post => {
       state.posts.push({ id: post.id, title: post.title, description: post.body });
     })
@@ -62,6 +62,8 @@ const sortedPosts = computed(() => {
 onMounted(() => {
   getPosts();
 });
+
+
 </script>
 
 
@@ -69,7 +71,7 @@ onMounted(() => {
 
 <template>
   <main class="main">
-    <h1 style="margin-bottom: 10px;">Posts page</h1>
+    <h1 style="margin-bottom: 10px;" >Posts page</h1>
     <div class="main__btns">
       <gen-button @click="state.dialogOpen = true">Create</gen-button>
       <gen-input v-model="state.searchQuery" type="text" placeholder="Search" />
