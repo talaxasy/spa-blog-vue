@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive, watch } from 'vue';
+import { onMounted, reactive, ref, type VNodeRef } from 'vue';
 import PostList from '@/components/PostList.vue';
 import PostForm from '@/components/PostForm.vue';
 import redaxios from 'redaxios';
@@ -43,6 +43,8 @@ const state = reactive<TState>({
   totalPages: 0,
 });
 
+const observer = ref<VNodeRef | null>(null);
+
 
 const getPosts = async () => {
   await redaxios.get('https://jsonplaceholder.typicode.com/posts', {
@@ -56,6 +58,25 @@ const getPosts = async () => {
   }).catch((e) => alert(e));
   state.postLoading = false;
 }
+
+const loadMorePosts = async () => {
+  state.page++;
+  await redaxios.get('https://jsonplaceholder.typicode.com/posts', {
+    params: {
+      _page: state.page,
+      _limit: state.limit,
+    }
+  }).then(({ data, headers }) => {
+    (data as any[]).forEach(post => {
+      state.posts.push({ id: post.id, title: post.title, description: post.body })
+    })
+    state.totalPages = Math.ceil(+headers.get('X-Total-Count')! / state.limit);
+  }).catch((e) => alert(e));
+  state.postLoading = false;
+}
+
+
+
 
 
 const sortedPosts = computed(() => {
@@ -73,10 +94,20 @@ const sortedPosts = computed(() => {
   }
 });
 
-watch(() => state.page, () => getPosts());
+// watch(() => state.page, () => getPosts());
 
 onMounted(() => {
   getPosts();
+
+  let bodyEnd = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) loadMorePosts()
+  }, {
+    root: document.querySelector('#scrollArea'),
+    rootMargin: '0px',
+    threshold: 1.0
+  });
+
+  bodyEnd.observe(observer.value);
 });
 
 
@@ -104,7 +135,11 @@ onMounted(() => {
       @delete="(id) => state.posts = state.posts.filter(el => el.id !== id)" />
     <div v-else>Loading...</div>
 
-    <Pagination v-model="state.page" :totalPages="state.totalPages" />
+    <div ref="observer" class="observer">
+
+    </div>
+
+    <!-- <Pagination v-model="state.page" :totalPages="state.totalPages" /> -->
 
 
   </main>
