@@ -21,7 +21,11 @@ type TState = {
     label: string;
   }[];
   searchQuery: string;
+  page: number;
+  limit: number;
+  totalPage: number;
 }
+
 const state = reactive<TState>({
   posts: [],
   dialogOpen: false,
@@ -33,15 +37,25 @@ const state = reactive<TState>({
     { value: 'new', label: 'Newest' },
   ],
   searchQuery: '',
+  page: 1,
+  limit: 10,
+  totalPage: 0,
 });
+
+
 const getPosts = async () => {
-  await redaxios.get('https://jsonplaceholder.typicode.com/posts?_limit=10').then(({ data }) => {
-    (data as any[]).forEach(post => {
-      state.posts.push({ id: post.id, title: post.title, description: post.body });
-    })
+  await redaxios.get('https://jsonplaceholder.typicode.com/posts', {
+    params: {
+      _page: state.page,
+      _limit: state.limit,
+    }
+  }).then(({ data, headers }) => {
+    state.posts = (data as any[]).map(post => ({ id: post.id, title: post.title, description: post.body }))
+    state.totalPage = Math.ceil(+headers.get('X-Total-Count')! / state.limit);
   }).catch((e) => alert(e));
   state.postLoading = false;
 }
+
 
 const sortedPosts = computed(() => {
   const sortBy = state.selectedSort;
@@ -58,6 +72,7 @@ const sortedPosts = computed(() => {
   }
 });
 
+watch(() => state.page, () => getPosts());
 
 onMounted(() => {
   getPosts();
@@ -71,7 +86,7 @@ onMounted(() => {
 
 <template>
   <main class="main">
-    <h1 style="margin-bottom: 10px;" >Posts page</h1>
+    <h1 style="margin-bottom: 10px;">Posts page</h1>
     <div class="main__btns">
       <gen-button @click="state.dialogOpen = true">Create</gen-button>
       <gen-input v-model="state.searchQuery" type="text" placeholder="Search" />
@@ -87,6 +102,19 @@ onMounted(() => {
     <PostList v-if="!state.postLoading" :posts="sortedPosts"
       @delete="(id) => state.posts = state.posts.filter(el => el.id !== id)" />
     <div v-else>Loading...</div>
+
+    <div class="pagination">
+      <gen-button @click="state.page = 1" :disabled="state.page === 1">First</gen-button>
+      <gen-button @click="state.page = state.page - 1" :disabled="state.page === 1">Prev</gen-button>
+      <div class="pagination__page-btns">
+        <gen-button v-for="page in state.totalPage" :key="page" class="page"
+          :class="{ 'page_current': state.page === page }" @click="state.page = page">
+          {{ page }}
+        </gen-button>
+      </div>
+      <gen-button @click="state.page = state.page + 1" :disabled="state.page === state.totalPage">Next</gen-button>
+      <gen-button @click="state.page = state.totalPage" :disabled="state.page === state.totalPage">Last</gen-button>
+    </div>
   </main>
 </template>
 
@@ -106,6 +134,31 @@ onMounted(() => {
     border-top: 1px solid rgba(103, 103, 103, 0.136);
     border-bottom: 1px solid rgba(103, 103, 103, 0.136);
     padding: 15px 0;
+  }
+
+
+}
+
+.pagination {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  background: var(--color-background);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(103, 103, 103, 0.136);
+  padding: 15px 0;
+
+  &__page-btns {
+    display: flex;
+    gap: 5px;
+  }
+}
+
+.page {
+  &_current {
+    background: #005f5f;
   }
 }
 </style>

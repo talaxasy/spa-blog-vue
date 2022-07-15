@@ -40,6 +40,7 @@ defineEmits<{
     border: 5px solid rgb(0, 128, 77);
     margin-bottom: 10px;
     justify-content: space-between;
+    background: var(--color-background);
 
     &__btns {
         align-self: center;
