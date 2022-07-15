@@ -4,6 +4,7 @@ import PostList from '@/components/PostList.vue';
 import PostForm from '@/components/PostForm.vue';
 import redaxios from 'redaxios';
 import { computed } from '@vue/reactivity';
+import Pagination from './components/Pagination.vue';
 
 type TPost = {
   id: number;
@@ -23,7 +24,7 @@ type TState = {
   searchQuery: string;
   page: number;
   limit: number;
-  totalPage: number;
+  totalPages: number;
 }
 
 const state = reactive<TState>({
@@ -39,7 +40,7 @@ const state = reactive<TState>({
   searchQuery: '',
   page: 1,
   limit: 10,
-  totalPage: 0,
+  totalPages: 0,
 });
 
 
@@ -51,7 +52,7 @@ const getPosts = async () => {
     }
   }).then(({ data, headers }) => {
     state.posts = (data as any[]).map(post => ({ id: post.id, title: post.title, description: post.body }))
-    state.totalPage = Math.ceil(+headers.get('X-Total-Count')! / state.limit);
+    state.totalPages = Math.ceil(+headers.get('X-Total-Count')! / state.limit);
   }).catch((e) => alert(e));
   state.postLoading = false;
 }
@@ -103,18 +104,9 @@ onMounted(() => {
       @delete="(id) => state.posts = state.posts.filter(el => el.id !== id)" />
     <div v-else>Loading...</div>
 
-    <div class="pagination">
-      <gen-button @click="state.page = 1" :disabled="state.page === 1">First</gen-button>
-      <gen-button @click="state.page = state.page - 1" :disabled="state.page === 1">Prev</gen-button>
-      <div class="pagination__page-btns">
-        <gen-button v-for="page in state.totalPage" :key="page" class="page"
-          :class="{ 'page_current': state.page === page }" @click="state.page = page">
-          {{ page }}
-        </gen-button>
-      </div>
-      <gen-button @click="state.page = state.page + 1" :disabled="state.page === state.totalPage">Next</gen-button>
-      <gen-button @click="state.page = state.totalPage" :disabled="state.page === state.totalPage">Last</gen-button>
-    </div>
+    <Pagination v-model="state.page" :totalPages="state.totalPages" />
+
+
   </main>
 </template>
 
@@ -134,31 +126,6 @@ onMounted(() => {
     border-top: 1px solid rgba(103, 103, 103, 0.136);
     border-bottom: 1px solid rgba(103, 103, 103, 0.136);
     padding: 15px 0;
-  }
-
-
-}
-
-.pagination {
-  position: sticky;
-  bottom: 0;
-  width: 100%;
-  background: var(--color-background);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-top: 1px solid rgba(103, 103, 103, 0.136);
-  padding: 15px 0;
-
-  &__page-btns {
-    display: flex;
-    gap: 5px;
-  }
-}
-
-.page {
-  &_current {
-    background: #005f5f;
   }
 }
 </style>
