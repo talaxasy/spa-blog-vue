@@ -72,7 +72,6 @@ const loadMorePosts = async () => {
     })
     state.totalPages = Math.ceil(+headers.get('X-Total-Count')! / state.limit);
   }).catch((e) => alert(e));
-  state.postLoading = false;
 }
 
 
@@ -100,7 +99,7 @@ onMounted(() => {
   getPosts();
 
   let bodyEnd = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting) loadMorePosts()
+    if (entries[0].isIntersecting && state.page < state.totalPages) loadMorePosts()
   }, {
     root: document.querySelector('#scrollArea'),
     rootMargin: '0px',
