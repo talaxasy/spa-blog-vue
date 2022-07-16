@@ -27,6 +27,7 @@ defineEmits<{
         </div>
         <div class="post__btns">
             <gen-button @click="$emit('delete', post.id)">Delete</gen-button>
+            <gen-button @click="$router.push(`/posts/${post.id}`)">Open</gen-button>
 
         </div>
     </div>
@@ -44,6 +45,9 @@ defineEmits<{
 
     &__btns {
         align-self: center;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
     }
 
 }
