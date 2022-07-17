@@ -1,4 +1,5 @@
 export default {
+  name: 'v-intersection',
   mounted: (ref: any, binding: any) => {
     const bodyEnd = new IntersectionObserver(
       (entries) => {
