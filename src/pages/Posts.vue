@@ -94,15 +94,7 @@ const sortedPosts = computed(() => {
 onMounted(() => {
     getPosts();
 
-    const bodyEnd = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && state.page < state.totalPages) loadMorePosts()
-    }, {
-        root: document.querySelector('#scrollArea'),
-        rootMargin: '0px',
-        threshold: 1.0
-    });
 
-    bodyEnd.observe(observer.value);
 });
 
 
@@ -130,9 +122,7 @@ onMounted(() => {
             @delete="(id) => state.posts = state.posts.filter(el => el.id !== id)" />
         <div v-else>Loading...</div>
 
-        <div ref="observer" class="observer">
-
-        </div>
+        <div v-intersection="loadMorePosts" class="observer"></div>
 
         <!-- <Pagination v-model="state.page" :totalPages="state.totalPages" /> -->
 
