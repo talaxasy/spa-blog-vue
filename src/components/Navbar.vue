@@ -6,6 +6,7 @@
     <nav class="navbar">
         <gen-button @click="$router.push('/')">Main</gen-button>
         <gen-button @click="$router.push('/about')">About</gen-button>
+        <gen-button @click="$router.push('/about')">About</gen-button>
         <gen-button @click="$router.push('/posts')">Posts</gen-button>
     </nav>
 </template>
