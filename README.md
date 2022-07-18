@@ -4,4 +4,4 @@
 
 Nothing interesting here.
 
-Hello world! This is a blog. It is a simple blog. 
+Hello world! This is a blog. It is a simple blog. Changes!
