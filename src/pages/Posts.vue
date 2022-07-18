@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref, type VNodeRef } from 'vue';
+import { onMounted, reactive, ref, watch, type VNodeRef } from 'vue';
 import PostList from '@/components/PostList.vue';
 import PostForm from '@/components/PostForm.vue';
 import redaxios from 'redaxios';
@@ -91,6 +91,8 @@ const sortedPosts = computed(() => {
 
 // watch(() => state.page, () => getPosts());
 
+// watch(() => state.totalPages, () => console.log(state.totalPages));
+
 onMounted(() => {
     getPosts();
 
@@ -99,7 +101,6 @@ onMounted(() => {
 
 
 </script>
-
 
 
 

@@ -1,5 +1,5 @@
 export default {
-  name: 'v-focus',
+  name: 'focus',
   mounted: (ref: any) => {
     ref.focus();
   },
