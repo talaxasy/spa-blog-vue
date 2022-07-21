@@ -4,7 +4,6 @@ import PostList from '@/components/PostList.vue';
 import PostForm from '@/components/PostForm.vue';
 import redaxios from 'redaxios';
 import { computed } from '@vue/reactivity';
-import Pagination from '@/components/Pagination.vue';
 
 type TPost = {
     id: number;
@@ -42,9 +41,6 @@ const state = reactive<TState>({
     limit: 10,
     totalPages: 0,
 });
-
-const observer = ref<VNodeRef | null>(null);
-
 
 const getPosts = async () => {
     await redaxios.get('https://jsonplaceholder.typicode.com/posts', {
@@ -95,8 +91,6 @@ const sortedPosts = computed(() => {
 
 onMounted(() => {
     getPosts();
-
-
 });
 
 
@@ -124,10 +118,6 @@ onMounted(() => {
         <div v-else>Loading...</div>
 
         <div v-intersection="loadMorePosts" class="observer"></div>
-
-        <!-- <Pagination v-model="state.page" :totalPages="state.totalPages" /> -->
-
-
     </main>
 </template>
 

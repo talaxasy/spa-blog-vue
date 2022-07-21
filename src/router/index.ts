@@ -6,21 +6,30 @@ import {
 
 import Main from '@/pages/Main.vue';
 import About from '@/pages/About.vue';
-import Posts from '@/pages/Posts.vue';
+import PostsInfinityScroll from '@/pages/PostsInfinityScroll.vue';
+import PostsPagination from '@/pages/PostsPagination.vue';
 import Post from '@/pages/Post.vue';
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: Main,
+    component: PostsInfinityScroll,
   },
   {
     path: '/about',
     component: About,
   },
   {
+    path: '/posts/pagination',
+    component: PostsPagination,
+  },
+  {
+    path: '/posts/infinity-scroll',
+    component: PostsInfinityScroll,
+  },
+  {
     path: '/posts',
-    component: Posts,
+    component: PostsInfinityScroll,
   },
   {
     path: '/posts/:id',
