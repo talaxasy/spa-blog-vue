@@ -3,12 +3,11 @@ import {
   createWebHistory,
   type RouteRecordRaw,
 } from 'vue-router';
-
-import Main from '@/pages/Main.vue';
 import About from '@/pages/About.vue';
 import PostsInfinityScroll from '@/pages/PostsInfinityScroll.vue';
 import PostsPagination from '@/pages/PostsPagination.vue';
 import Post from '@/pages/Post.vue';
+import NotFound from '@/pages/NotFound.vue';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -35,6 +34,8 @@ const routes: RouteRecordRaw[] = [
     path: '/posts/:id',
     component: Post,
   },
+  { path: '/404', component: NotFound },
+  { path: '/:catchAll(.*)', redirect: '/404' },
 ];
 
 const router = createRouter({
