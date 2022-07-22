@@ -1,35 +1,24 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { onMounted, reactive, ref, watch, type VNodeRef } from 'vue';
 import PostList from '@/components/PostList.vue';
 import PostForm from '@/components/PostForm.vue';
 import redaxios from 'redaxios';
 import { computed } from '@vue/reactivity';
+import usePosts from '@/hooks/usePosts';
 
-type TPost = {
-    id: number;
-    title: string;
-    description: string;
-}
 
 type TState = {
-    posts: TPost[];
     dialogOpen: boolean;
-    postLoading: boolean;
     selectedSort: 'title' | 'description' | 'new' | '';
     sortOptions: {
         value: string;
         label: string;
     }[];
     searchQuery: string;
-    page: number;
-    limit: number;
-    totalPages: number;
 }
 
 const state = reactive<TState>({
-    posts: [],
     dialogOpen: false,
-    postLoading: true,
     selectedSort: '',
     sortOptions: [
         { value: 'title', label: 'Title' },
@@ -37,26 +26,26 @@ const state = reactive<TState>({
         { value: 'new', label: 'Newest' },
     ],
     searchQuery: '',
-    page: 1,
-    limit: 10,
-    totalPages: 0,
 });
 
-const getPosts = async () => {
-    await redaxios.get('https://jsonplaceholder.typicode.com/posts', {
-        params: {
-            _page: state.page,
-            _limit: state.limit,
-        }
-    }).then(({ data, headers }) => {
-        state.posts = (data as any[]).map(post => ({ id: post.id, title: post.title, description: post.body }))
-        state.totalPages = Math.ceil(+headers.get('X-Total-Count')! / state.limit);
-    }).catch((e) => alert(e));
-    state.postLoading = false;
-}
+// const getPosts = async () => {
+//     await redaxios.get('https://jsonplaceholder.typicode.com/posts', {
+//         params: {
+//             _page: state.page,
+//             _limit: state.limit,
+//         }
+//     }).then(({ data, headers }) => {
+//         state.posts = (data as any[]).map(post => ({ id: post.id, title: post.title, description: post.body }))
+//         state.totalPages = Math.ceil(+headers.get('X-Total-Count')! / state.limit);
+//     }).catch((e) => alert(e));
+//     state.postLoading = false;
+// }
+
+
+const { posts, totalPages, loading, page } = usePosts(10);
 
 const loadMorePosts = async () => {
-    state.page++;
+    page++;
     await redaxios.get('https://jsonplaceholder.typicode.com/posts', {
         params: {
             _page: state.page,
@@ -89,9 +78,9 @@ const sortedPosts = computed(() => {
 
 // watch(() => state.totalPages, () => console.log(state.totalPages));
 
-onMounted(() => {
-    getPosts();
-});
+// onMounted(() => {
+//     getPosts();
+// });
 
 
 </script>
@@ -135,4 +124,4 @@ onMounted(() => {
         padding: 15px 0;
     }
 }
-</style>
+</style> -->
