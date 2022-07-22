@@ -2,7 +2,6 @@
 import { onMounted, reactive, ref, watch, type VNodeRef } from 'vue';
 import PostList from '@/components/PostList.vue';
 import PostForm from '@/components/PostForm.vue';
-import redaxios from 'redaxios';
 import { computed } from '@vue/reactivity';
 import Pagination from '@/components/Pagination.vue';
 import usePosts from '@/hooks/usePosts';

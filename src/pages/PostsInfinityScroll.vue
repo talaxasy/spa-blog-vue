@@ -1,10 +1,11 @@
-<!-- <script setup lang="ts">
+<script setup lang="ts">
 import { onMounted, reactive, ref, watch, type VNodeRef } from 'vue';
 import PostList from '@/components/PostList.vue';
 import PostForm from '@/components/PostForm.vue';
 import redaxios from 'redaxios';
 import { computed } from '@vue/reactivity';
 import usePosts from '@/hooks/usePosts';
+import useLoadMorePosts from '@/hooks/useLoadMorePosts';
 
 
 type TState = {
@@ -43,25 +44,13 @@ const state = reactive<TState>({
 
 
 const { posts, totalPages, loading, page } = usePosts(10);
+const { fetching } = useLoadMorePosts(page, posts, totalPages, 10);
 
-const loadMorePosts = async () => {
-    page++;
-    await redaxios.get('https://jsonplaceholder.typicode.com/posts', {
-        params: {
-            _page: state.page,
-            _limit: state.limit,
-        }
-    }).then(({ data, headers }) => {
-        (data as any[]).forEach(post => {
-            state.posts.push({ id: post.id, title: post.title, description: post.body })
-        })
-        state.totalPages = Math.ceil(+headers.get('X-Total-Count')! / state.limit);
-    }).catch((e) => alert(e));
-}
+
 
 const sortedPosts = computed(() => {
     const sortBy = state.selectedSort;
-    const filteredPosts = state.posts.filter(post => post.title.toLowerCase().includes(state.searchQuery.toLowerCase()));
+    const filteredPosts = posts.filter(post => post.title.toLowerCase().includes(state.searchQuery.toLowerCase()));
     switch (sortBy) {
         case 'title':
             return filteredPosts.sort((a, b) => a.title.localeCompare(b.title));
@@ -73,15 +62,6 @@ const sortedPosts = computed(() => {
             return filteredPosts;
     }
 });
-
-// watch(() => state.page, () => getPosts());
-
-// watch(() => state.totalPages, () => console.log(state.totalPages));
-
-// onMounted(() => {
-//     getPosts();
-// });
-
 
 </script>
 
@@ -97,16 +77,15 @@ const sortedPosts = computed(() => {
         </div>
         <gen-dialog v-model:open="state.dialogOpen">
             <PostForm @create="(post) => {
-                state.posts.push(post);
+                posts.push(post);
                 state.dialogOpen = false;
             }" />
         </gen-dialog>
 
-        <PostList v-if="!state.postLoading" :posts="sortedPosts"
-            @delete="(id) => state.posts = state.posts.filter(el => el.id !== id)" />
+        <PostList v-if="!loading" :posts="sortedPosts" @delete="(id) => posts = posts.filter(el => el.id !== id)" />
         <div v-else>Loading...</div>
 
-        <div v-intersection="loadMorePosts" class="observer"></div>
+        <div v-intersection="fetching" class="observer"></div>
     </main>
 </template>
 
@@ -124,4 +103,4 @@ const sortedPosts = computed(() => {
         padding: 15px 0;
     }
 }
-</style> -->
+</style>

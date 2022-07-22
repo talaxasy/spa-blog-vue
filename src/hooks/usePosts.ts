@@ -20,8 +20,8 @@ export default function usePosts(limit: number) {
     page: 1,
   });
 
-  const fetching = () =>
-    redaxios
+  const fetching = async () =>
+    await redaxios
       .get('https://jsonplaceholder.typicode.com/posts', {
         params: {
           _page: state.page,
@@ -35,9 +35,9 @@ export default function usePosts(limit: number) {
           description: post.body,
         }));
         state.totalPages = Math.ceil(+headers.get('X-Total-Count')! / limit);
-        state.loading = false;
       })
       .catch((e) => alert(e));
+  state.loading = false;
 
   watch(
     () => state.page,
