@@ -8,48 +8,37 @@ type TPost = {
 };
 
 export default function usePosts(limit: number) {
-  const state = reactive<{
-    posts: TPost[];
-    loading: boolean;
-    totalPages: number;
-    page: number;
-  }>({
-    posts: [],
-    loading: true,
-    totalPages: 0,
-    page: 1,
-  });
+  const posts = ref<TPost[]>([]);
+  const loading = ref(true);
+  const totalPages = ref(0);
+  const page = ref(1);
 
   const fetching = async () =>
     await redaxios
       .get('https://jsonplaceholder.typicode.com/posts', {
         params: {
-          _page: state.page,
+          _page: page.value,
           _limit: limit,
         },
       })
       .then(({ data, headers }) => {
-        state.posts = (data as any[]).map((post) => ({
+        posts.value = (data as any[]).map((post) => ({
           id: post.id,
           title: post.title,
           description: post.body,
         }));
-        state.totalPages = Math.ceil(+headers.get('X-Total-Count')! / limit);
+        totalPages.value = Math.ceil(+headers.get('X-Total-Count')! / limit);
       })
       .catch((e) => alert(e));
-  state.loading = false;
-
-  watch(
-    () => state.page,
-    () => fetching(),
-  );
+  loading.value = false;
 
   onMounted(fetching);
 
   return {
-    posts: state.posts,
-    loading: state.loading,
-    totalPages: state.totalPages,
-    page: state.page,
+    posts,
+    loading,
+    totalPages,
+    page,
+    fetching,
   };
 }

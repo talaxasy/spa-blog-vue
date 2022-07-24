@@ -43,14 +43,14 @@ const state = reactive<TState>({
 // }
 
 
-const { posts, totalPages, loading, page } = usePosts(10);
-const { fetching } = useLoadMorePosts(page, posts, totalPages, 10);
+const { loading, page, posts } = usePosts(10);
+const { fetching } = useLoadMorePosts(page, posts, 10);
 
 
 
 const sortedPosts = computed(() => {
     const sortBy = state.selectedSort;
-    const filteredPosts = posts.filter(post => post.title.toLowerCase().includes(state.searchQuery.toLowerCase()));
+    const filteredPosts = posts.value.filter(post => post.title.toLowerCase().includes(state.searchQuery.toLowerCase()));
     switch (sortBy) {
         case 'title':
             return filteredPosts.sort((a, b) => a.title.localeCompare(b.title));
