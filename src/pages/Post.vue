@@ -13,7 +13,7 @@ const state = reactive<{
     loading: boolean;
 }>({
     post: null,
-    loading: false,
+    loading: true,
 });
 
 onMounted(async () => {
