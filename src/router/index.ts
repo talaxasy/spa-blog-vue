@@ -31,11 +31,11 @@ const routes: RouteRecordRaw[] = [
     component: PostsInfinityScroll,
   },
   {
-    path: '/posts/:id',
+    path: '/posts/:id(\\d+)',
     component: Post,
   },
   { path: '/404', component: NotFound },
-  { path: '/:catchAll(.*)', redirect: '/404' },
+  { path: '/:pathMatch(.*)*', redirect: '/404' },
 ];
 
 const router = createRouter({
